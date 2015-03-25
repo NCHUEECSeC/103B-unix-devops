@@ -1,0 +1,593 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=1024">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>Unix DevOp #1 | by PastLeo</title>
+
+    <meta name="generator" content="Slide Show (S9)">
+    <meta name="author" content="PastLeo">
+
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:700' rel='stylesheet' type='text/css'>
+    <style>
+        h1,h2,h3,h4,h5,h6{
+            text-align: center;
+        }
+
+        /*loading style, title and author*/
+        div#loading{
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            transition: opacity 1s;
+
+            background: white;
+            -webkit-animation: loadingEffect 5s infinite; /* Chrome, Safari, Opera */
+            animation: loadingEffect 5s infinite;
+        }
+        div#loading h1{
+            margin: 0;
+            padding-top: 80px;
+            padding-bottom: 20px;
+
+            background: rgba(182, 215, 213, 1);
+        }
+        div#loading h3{
+            margin: 0;
+            padding-top: 20px;
+            padding-bottom: 20px;
+
+            background: rgba(181, 221, 197, 1)
+        }
+        div#loading.done{
+            opacity:0;
+        }
+
+        /* Chrome, Safari, Opera */
+        @-webkit-keyframes loadingEffect {
+            0%   {background: rgba(215, 172, 172, 1);}
+            25%  {background: rgba(206, 215, 172, 1);}
+            50%  {background: rgba(172, 215, 206, 1);}
+            100% {background: rgba(215, 172, 172, 1);}
+        }
+
+        /* Standard syntax */
+        @keyframes loadingEffect {
+            0%   {background: rgba(215, 172, 172, 1);}
+            25%  {background: rgba(206, 215, 172, 1);}
+            50%  {background: rgba(172, 215, 206, 1);}
+            100% {background: rgba(215, 172, 172, 1);}
+        }
+
+        /*the background*/
+        body {
+            background: #545454; /* Old browsers */
+            background: -moz-radial-gradient(center, ellipse cover,  #545454 0%, #262626 100%); /* FF3.6+ */
+            background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,#545454), color-stop(100%,#262626)); /* Chrome,Safari4+ */
+            background: -webkit-radial-gradient(center, ellipse cover,  #545454 0%,#262626 100%); /* Chrome10+,Safari5.1+ */
+            background: -o-radial-gradient(center, ellipse cover,  #545454 0%,#262626 100%); /* Opera 12+ */
+            background: -ms-radial-gradient(center, ellipse cover,  #545454 0%,#262626 100%); /* IE10+ */
+            background: radial-gradient(ellipse at center,  #545454 0%,#262626 100%); /* W3C */
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#545454', endColorstr='#262626',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+
+
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        /*normal step*/
+        .step {
+          color:rgba(124, 177, 143, 1);
+          width: 1024px;
+          height: 576px;
+          padding: 40px 60px;
+
+          font-size: 30px;
+
+          opacity: 0.9;
+          line-height: 1.6;
+
+          transition: all 0.5s ease 0s;
+        }
+
+        .step.future {
+          opacity: 0;
+          pointer-events:none;
+        }
+
+        .step.active {
+          opacity: 1;
+          text-shadow: 0px 0px 20px rgba(0, 38, 104, 1);
+        }
+
+        .step.present {
+            z-index: 100;
+        }
+
+        /*slide step*/
+        .slide {
+          background: black;
+          border-radius: 10px;
+          overflow: auto;
+        }
+
+        .step.unclickable {
+            pointer-events:none;
+        }
+
+        .step.center p {
+            text-align: center;
+        }
+
+        .step.showOnlyWhenPresent {
+            opacity: 0;
+            pointer-events:none;
+        }
+
+        .step.showOnlyWhenPresent.present {
+            opacity: 1;
+            pointer-events:default;
+        }
+
+        /*markdown elements*/
+        h2{
+            margin-top: 20%;
+            margin-bottom: 10px;
+        }
+
+        h4{
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin: 0;
+        }
+
+        pre {
+            background-color: rgba(56, 186, 112, 1);
+            padding: 15px;
+            overflow: auto;
+        }
+
+        code {
+            background-color: rgba(56, 186, 112, 0.82);
+            color: #D1CABC;
+            border-radius: 10px;
+            font-family: "Consolas","Montserrat",sans-serif;
+        }
+
+        blockquote {
+            margin: 0px;
+            padding-left: 40px;
+            border-left: 10px solid #000;
+            color: rgba(105, 105, 105, 1)
+        }
+
+        blockquote blockquote{
+            border: none;
+        }
+
+        blockquote p{
+            margin: 0;
+        }
+
+        img {
+            max-width: 100%;
+        }
+
+        ul {
+            padding-left: 1.75em;
+            margin: 0px 0px 20px;
+        }
+
+        a {
+            color: rgba(0, 149, 207, 1);
+        }
+
+        strong {
+            color: rgba(134, 109, 81, 1);
+        }
+
+        /*controls*/
+
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+        }
+
+        .arrow {
+            width: 0px;
+            height: 0px;
+            border: 30px solid rgba(153, 186, 213, 0.5);
+            float: left;
+            margin-right: 30px;
+            -moz-user-select: none;
+        }
+
+        .prev {
+            border-top-color: transparent;
+            border-bottom-color: transparent;
+            border-left-color: transparent;
+            border-left-width: 0px;
+            border-right-width: 50px;
+        }
+
+        .prev:hover {
+            border-right-color: rgba(194, 217, 225, 1);
+            cursor: pointer;
+        }
+
+        .next {
+            border-top-color: transparent;
+            border-bottom-color: transparent;
+            border-right-color: transparent;
+            border-left-width: 50px;
+            border-right-width: 0px;
+        }
+
+        .next:hover{
+            border-left-color: rgba(194, 217, 225, 1);
+            cursor: pointer;
+        }
+
+        /*picture slide*/
+        .picture img{
+            max-height: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+        }
+        
+
+
+
+    </style>
+</head>
+
+<body class="impress-not-supported">
+
+<div id="impress">
+
+    <!-- note: assumes no header (breaking slides w/ SLIDE directive) -->
+
+    <div class='step ' data-x='0' data-y='0' data-scale='4' >
+      <!-- === begin markdown block ===
+
+      generated by markdown/1.2.0 on Ruby 2.1.5 (2014-11-13) [x86_64-linux-gnu]
+                on 2015-03-25 14:48:24 +0000 with Markdown engine kramdown (1.6.0)
+                  using options {}
+  -->
+
+<!-- _S9SLIDE_  x=0 y=0 scale=4 -->
+
+<h2 id="unix-devops-1">Unix DevOps #1</h2>
+
+<h4 id="basic-operations">Basic Operations</h4>
+
+
+    </div>
+
+    <div class='step ' data-x='0' data-y='2000' data-rotate='180' data-scale='4' >
+      <!-- _S9SLIDE_  x=0 y=2000 rotate=180 scale=4 -->
+
+<h2 id="devops">啥是 <code>DevOps</code></h2>
+
+<h4 id="check-this-outhttpzhwikipediaorgwikidevops"><a href="http://zh.wikipedia.org/wiki/DevOps">Check this out</a></h4>
+
+
+    </div>
+
+    <div class='step ' data-x='8400' data-y='2000' data-rotate='270' data-scale='10' >
+      <!-- _S9SLIDE_  x=8400 y=2000 rotate=270 scale=10 -->
+
+<h3 id="section">本課期主要希望可以教會大家以下</h3>
+
+<ul>
+  <li>Unix 基本操作</li>
+  <li>Linux 權限、使用者管理</li>
+  <li>系統管理、軟體安裝</li>
+  <li>架設 Web Server</li>
+  <li>部署一個 Web service</li>
+</ul>
+
+<pre><code>希望能讓 Linux 的(雲端)伺服器成為各位的好朋友
+</code></pre>
+
+
+    </div>
+
+    <div class='step ' data-x='3000' data-y='2000' data-z='-3000' data-rotate='300' data-scale='1' >
+      <!-- _S9SLIDE_  x=3000 y=2000 z=-3000 rotate=300 scale=1 -->
+
+<h2 id="section-1">首先，來點基本操作</h2>
+
+<h4 id="section-2">打開終端機</h4>
+
+
+    </div>
+
+    <div class='step ' data-x='14400' data-y='2000' data-rotate='270' data-scale='6' >
+      <!-- _S9SLIDE_  x=14400 y=2000 rotate=270 scale=6 -->
+
+<h3 id="void">你可能會發現這是個 void</h3>
+
+<p><img src="http://i.imgur.com/MpkRc8l.png" alt="terminal_1" /></p>
+
+
+    </div>
+
+    <div class='step ' data-x='14400' data-y='2000' data-z='7000' data-rotate='270' data-scale='6' >
+      <!-- _S9SLIDE_  x=14400 y=2000 z=7000 rotate=270 scale=6 -->
+
+<h3 id="gui-">其實它的可能性比 GUI 多更多</h3>
+
+<p><img src="http://i.imgur.com/Bl0AleE.png" alt="terminal_2" /></p>
+
+
+    </div>
+
+    <div class='step center' data-x='14400' data-y='2000' data-z='14000' data-rotate='270' data-rotate-z='90' data-scale='6' >
+      <!-- _S9SLIDE_  center x=14400 y=2000 z=14000 rotate=270 rotate-z=90 scale=6 -->
+
+<h3 id="section-3">它也讓遠端操作變得比較省資源</h3>
+
+<p><img src="http://i.imgur.com/iiwctF2.png" alt="terminal_3" /></p>
+
+
+    </div>
+
+    <div class='step ' data-x='20700' data-y='-2000' data-scale='4' >
+      <!-- _S9SLIDE_  x=20700 y=-2000 scale=4 -->
+
+<h2 id="one-more-thing--before-we-start">One more thing … before we start</h2>
+
+<h4 id="tab-">別忘了愛用 <code>Tab</code> 問問電腦有啥可用的指令</h4>
+
+
+    </div>
+
+    <div class='step picture center' data-x='20700' data-y='0' data-scale='4' >
+      <!-- _S9SLIDE_  picture center x=20700 y=0 scale=4 -->
+
+<h3 id="section-4">檔案操作</h3>
+
+<p><img src="http://i.imgur.com/B3FFDjY.png" alt="file_manager" /></p>
+
+
+    </div>
+
+    <div class='step ' data-x='20100' data-y='-600' data-z='6000' data-scale='1' >
+      <!-- _S9SLIDE_  x=20100 y=-600 z=6000 scale=1 -->
+
+<h2 id="pwd--"><code>pwd # 取得現在的位置</code></h2>
+
+
+    </div>
+
+    <div class='step ' data-x='20100' data-y='-200' data-z='6000' data-scale='1' >
+      <!-- _S9SLIDE_  x=20100 y=-200 z=6000 scale=1 -->
+
+<h2 id="ls--al--"><code>ls [-al] # 列出目前所在位置的檔案清單</code></h2>
+
+
+    </div>
+
+    <div class='step ' data-x='20100' data-y='200' data-z='6000' data-scale='1' >
+      <!-- _S9SLIDE_  x=20100 y=200 z=6000 scale=1 -->
+
+<h2 id="cd-path--"><code>cd &lt;path&gt; # 去別的目錄</code></h2>
+
+
+    </div>
+
+    <div class='step ' data-x='20100' data-y='600' data-z='6000' data-scale='1' >
+      <!-- _S9SLIDE_  x=20100 y=600 z=6000 scale=1 -->
+
+<h2 id="mkdir--p-path--"><code>mkdir [-p] &lt;path&gt; # 建立資料夾</code></h2>
+
+
+    </div>
+
+    <div class='step ' data-x='21300' data-y='-600' data-z='6000' data-scale='1' >
+      <!-- _S9SLIDE_  x=21300 y=-600 z=6000 scale=1 -->
+
+<h2 id="touch-path----"><code>touch &lt;path&gt; # 建立 / 戳一下檔案</code></h2>
+
+
+    </div>
+
+    <div class='step ' data-x='21300' data-y='-200' data-z='6000' data-scale='1' >
+      <!-- _S9SLIDE_  x=21300 y=-200 z=6000 scale=1 -->
+
+<h2 id="mv-src-des----"><code>mv &lt;src&gt; &lt;des&gt; # 移動 / 重新命名</code></h2>
+
+
+    </div>
+
+    <div class='step ' data-x='21300' data-y='200' data-z='6000' data-scale='1' >
+      <!-- _S9SLIDE_  x=21300 y=200 z=6000 scale=1 -->
+
+<h2 id="cp--rv-src-des--"><code>cp [-Rv] &lt;src&gt; &lt;des&gt; # 複製</code></h2>
+
+
+    </div>
+
+    <div class='step ' data-x='21300' data-y='600' data-z='6000' data-scale='1' >
+      <!-- _S9SLIDE_  x=21300 y=600 z=6000 scale=1 -->
+
+<h2 id="rm--rvf-path--"><code>rm [-Rvf] &lt;path&gt; # 刪除</code></h2>
+
+
+    </div>
+
+    <div class='step ' data-x='20700' data-y='0' data-z='4000' data-scale='4' >
+      <!-- _S9SLIDE_  x=20700 y=0 z=4000 scale=4 -->
+
+
+    </div>
+
+    <div class='step picture center' data-x='20700' data-y='5000' data-scale='4' >
+      <!-- _S9SLIDE_  picture center x=20700 y=5000 scale=4 -->
+
+<h3 id="section-5">純文字檔操作</h3>
+
+<p><img src="http://i.imgur.com/WcNDCQc.png" alt="notepad" /></p>
+
+
+    </div>
+
+    <div class='step ' data-x='20100' data-y='4800' data-z='6000' data-scale='1' >
+      <!-- _S9SLIDE_  x=20100 y=4800 z=6000 scale=1 -->
+
+<h2 id="path---stdout-"><code>&gt;&gt; | &gt; &lt;path&gt; # 把 stdout 輸入至檔案</code></h2>
+
+<h4 id="echo-hello-everyone--hello"><code>echo 'hello everyone' &gt;&gt; hello</code></h4>
+
+
+    </div>
+
+    <div class='step ' data-x='20100' data-y='5200' data-z='6000' data-scale='1' >
+      <!-- _S9SLIDE_  x=20100 y=5200 z=6000 scale=1 -->
+
+<h2 id="cat-path--"><code>cat &lt;path&gt; # 印出檔案內容</code></h2>
+
+
+    </div>
+
+    <div class='step ' data-x='21300' data-y='4800' data-z='6000' data-scale='1' >
+      <!-- _S9SLIDE_  x=21300 y=4800 z=6000 scale=1 -->
+
+<h2 id="less-f-path--"><code>less [+F] &lt;path&gt; # 觀看檔案內容</code></h2>
+
+
+    </div>
+
+    <div class='step ' data-x='21300' data-y='5200' data-z='6000' data-scale='1' >
+      <!-- _S9SLIDE_  x=21300 y=5200 z=6000 scale=1 -->
+
+<h2 id="vi--vim-path"><code>vi | vim &lt;path&gt;</code></h2>
+
+<h4 id="section-6"><code>文字編輯器，神之編輯器</code></h4>
+
+<h4 id="httpblogvgodtw20091208vim-cheat-sheet-for-programmers"><a href="http://blog.vgod.tw/2009/12/08/vim-cheat-sheet-for-programmers/">簡易操作說明</a></h4>
+
+
+    </div>
+
+    <div class='step ' data-x='20700' data-y='5000' data-z='4000' data-scale='4' >
+      <!-- _S9SLIDE_  x=20700 y=5000 z=4000 scale=4 -->
+
+
+    </div>
+
+    <div class='step ' data-x='6300' data-y='-4000' data-rotate='20' data-scale='4' >
+      <!-- _S9SLIDE_  x=6300 y=-4000 rotate=20 scale=4 -->
+
+<h2 id="section-7">你剛剛呼叫的東西全部都是執行檔</h2>
+
+<h4 id="tab--1">別忘了 <code>Tab</code> 是你的好朋友</h4>
+
+
+    </div>
+
+    <div class='step ' data-x='7000' data-y='-5000' data-rotate='40' data-scale='3' >
+      <!-- _S9SLIDE_  x=7000 y=-5000 rotate=40 scale=3 -->
+
+<h2 id="section-8">這些執行檔到底在哪</h2>
+
+<pre><code>which &lt;exe_name&gt;
+</code></pre>
+
+
+    </div>
+
+    <div class='step ' data-x='7700' data-y='-6000' data-z='-100' data-rotate='60' data-scale='2' >
+      <!-- _S9SLIDE_  x=7700 y=-6000 z=-100 rotate=60 scale=2 -->
+
+<h2 id="section-9">電腦找了那些地方?</h2>
+
+<pre><code>echo $PATH
+</code></pre>
+
+<h4 id="windows-">記得 <code>Windows</code> 也是如此嗎</h4>
+
+
+    </div>
+
+    <div class='step ' data-x='8400' data-y='-6500' data-rotate='90' data-scale='1' >
+      <!-- _S9SLIDE_  x=8400 y=-6500 rotate=90 scale=1 -->
+
+<h2 id="section-10">電腦，教我</h2>
+
+<pre><code>man &lt;name&gt;
+</code></pre>
+
+
+    </div>
+
+    <div class='step ' data-x='5000' data-y='-7000' data-scale='3' >
+      <!-- _S9SLIDE_  x=5000 y=-7000 scale=3 -->
+
+<h2 id="section-11">今天的指令先到這吧</h2>
+
+<h4 id="section-12">下次就要開始做系統管理了</h4>
+
+<h4 id="linux--debian-">希望大家能準備好自己的 Linux 環境 (debian 為主)</h4>
+
+<h4 id="httpsgistgithubcomqas612820704c72639928b732103a138"><a href="https://gist.github.com/qas612820704/c72639928b732103a138">使出學生牌，取得雲端主機</a></h4>
+
+<h4 id="virtualbox-">要不然就是用 Virtualbox 在自己的電腦上安裝…</h4>
+
+<!-- === end markdown block === -->
+
+    </div>
+
+
+</div>
+
+<div id="loading">
+    <h1>Unix DevOp #1</h1>
+    <h3>PastLeo</h3>
+    <div id="circleG">
+    </div>
+</div>
+
+<div class="controls">
+    <div class="arrow prev"></div>
+    <div class="arrow next"></div>
+</div>
+
+<script src="http://netdna.impressjscdn.com/impressjs/0.5.3/js/impress.js"></script>
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+
+<script>
+    var impressInstance;
+    $(document).ready(function(){
+        impressInstance = impress();
+        impressInstance.init();
+        /*impressInstance.prev_ori = impressInstance.prev;*/
+        impressInstance.next_ori = impressInstance.next;
+        impressInstance.next = function(){
+            impressInstance.next_ori();
+            $("div.step.active").removeClass("future");
+        };
+        $(".controls .arrow.prev").click(impressInstance.prev);
+        $(".controls .arrow.next").click(impressInstance.next);
+        if(window.location.hash)
+            $("div#impress div.step" + window.location.hash.replace("#/","#")).prevAll().removeClass("future");
+        setTimeout(function(){
+            $('div#loading').addClass('done');
+            setTimeout(function(){
+                $('div#loading').remove();
+
+            },1000);
+        },2000);
+    });
+</script>
+
+</body>
+</html>
