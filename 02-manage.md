@@ -113,9 +113,9 @@ ssh-keygen # 生產 ssh key
 %%%%%%%%%%%%%%%
 !SLIDE bg-when-present x=20100 y=-300 z=6000 scale=1
 
-## `su` / `sudo`
+## `su <user>` / `sudo [-u <user>] <command>` / `visudo`
 
-#### [變更身份 / 使用不同身份做 ...](http://linux.vbird.org/linux_basic/0410accountmanager.php#userswitch)
+#### [變更身份 / 使用不同身份做 ... / 指定最高權限者](http://linux.vbird.org/linux_basic/0410accountmanager.php#userswitch)
 
 %%%%%%%%%%%%%%%
 !SLIDE bg-when-present x=21300 y=0 z=6000 scale=1
@@ -292,6 +292,7 @@ netstat -tenlp # 目前監聽網路的清單
 ```
 service [service_name] [status | start | stop]
 # CentOS 7 改成 systemctl 了
+chkconfig [service_name] [on|off]
 ```
 
 %%%%%%%%%%%%%%%
