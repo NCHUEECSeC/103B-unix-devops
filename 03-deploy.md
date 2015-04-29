@@ -259,7 +259,7 @@ exit # 離開
  * 最重要的一點是他因為限制使用 Linux，所以原生支援使用 Shell script 自動部署，還可以直接從網路下載別人建立好的環境，這樣一來
 
 %%%%%%%%%%%%%%%
-!SLIDE bg-when-present x=4000 y=-8000 z=-4500 rotate-x=-90 scale=1
+!SLIDE x=4000 y=-8000 z=-4500 rotate-x=-90 scale=1
 
 ### 好吧，要怎麼開始使用 Docker 呢？ (Boot2docker)
 
@@ -270,7 +270,7 @@ exit # 離開
  * DEMO 安裝 Boot2docker
 
 %%%%%%%%%%%%%%%
-!SLIDE x=4000 y=-10000 z=-4500 rotate-x=-90 scale=1
+!SLIDE x=6000 y=-8000 z=-4500 rotate-x=-90 scale=1
 
 ### 利用 Docker 最重要的特性：使用別人寫好 / 建立好的環境：
 
