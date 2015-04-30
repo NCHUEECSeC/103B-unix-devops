@@ -44,13 +44,12 @@ author: PastLeo
 
 ### 這堂課程我們將會
 
- * 認識 DBMS 資料庫
- * 安裝、設定資料庫 MySQL (MariaDB)
- * 介紹服務
- * 部署一個服務，以 Wordpress 為範例
- * 如果還有時間，希望能講到
- * 更多服務的的佈署，例如 Laravel 專案、Django 專案
- * Docker & Boot2docker
+ * [認識 DBMS 資料庫](#/step-4)
+ * [安裝、設定資料庫 MySQL (MariaDB)](#/step-7)
+ * [介紹服務](#/step-13)
+ * [部署一個服務，以 Wordpress 為範例](#/step-17)
+ * [更多服務的的佈署，例如 Laravel 專案、Django 專案](#/step-18)
+ * [Docker & Boot2docker](#/step-20)
 
 %%%%%%%%%%%%%%%
 !SLIDE x=8400 y=2000 rotate=270 scale=10
@@ -236,7 +235,7 @@ exit # 離開
  * 可是我平常要打 LOL，必須使用 Windows 怎辦？
 
 %%%%%%%%%%%%%%%
-!SLIDE x=5000 y=-7000 z=-3000 scale=3
+!SLIDE x=5000 y=-7000 z=-4000 scale=3
 
 ### 一個很潮的東西：Docker
 
@@ -248,7 +247,7 @@ exit # 離開
  * 先講一下 docker 的優點
 
 %%%%%%%%%%%%%%%
-!SLIDE x=5000 y=-7000 z=-6000 scale=3
+!SLIDE x=5000 y=-7000 z=-8000 scale=3
 
 ### Docker 是一個只虛擬作業系統，driver 以及硬體都直接使用原本的作業系統
 
@@ -259,7 +258,7 @@ exit # 離開
  * 最重要的一點是他因為限制使用 Linux，所以原生支援使用 Shell script 自動部署，還可以直接從網路下載別人建立好的環境，這樣一來
 
 %%%%%%%%%%%%%%%
-!SLIDE x=4000 y=-8000 z=-4500 rotate-x=-90 scale=1
+!SLIDE x=4000 y=-8000 z=-6000 rotate-x=-90 scale=1
 
 ### 好吧，要怎麼開始使用 Docker 呢？ (Boot2docker)
 
@@ -270,7 +269,7 @@ exit # 離開
  * DEMO 安裝 Boot2docker
 
 %%%%%%%%%%%%%%%
-!SLIDE x=6000 y=-8000 z=-4500 rotate-x=-90 scale=1
+!SLIDE x=6000 y=-8000 z=-6000 rotate-x=-90 scale=1
 
 ### 利用 Docker 最重要的特性：使用別人寫好 / 建立好的環境：
 
